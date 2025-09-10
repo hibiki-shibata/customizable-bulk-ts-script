@@ -6,6 +6,6 @@ node_modules
 requestBody.json
 venueID.csv
 dist
-resource
-access-token.txt
-custom-values.csv
+# resource
+# access-token.txt
+# custom-values.csv
