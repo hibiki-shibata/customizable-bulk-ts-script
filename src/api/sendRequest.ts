@@ -32,7 +32,7 @@ export async function sendNoBodyRequest({ URI, methodType, securityHeaderName, a
     methodType: string,
     securityHeaderName: string,
     accessToken: string
-}): Promise<boolean> {
+}): Promise<Response> {
     const response: Response = await fetch(URI, {
         method: methodType,
         headers: {
@@ -45,5 +45,5 @@ export async function sendNoBodyRequest({ URI, methodType, securityHeaderName, a
 
     if (!response.ok) console.warn(`Error: ${response.status} ${response.statusText}`)
 
-    return response.ok
+    return response
 }
