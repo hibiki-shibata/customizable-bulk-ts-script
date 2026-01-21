@@ -84,10 +84,6 @@ export class GetVenueIdFromNameService {
             })
 
 
-            console.log(`Sending request for row: ${row_of_base_column}`)
-            console.log(`Request URI: ${request_uri}`)
-
-
 
             // Send request without waiting the result of previous request.
             if (config.async_process) {
