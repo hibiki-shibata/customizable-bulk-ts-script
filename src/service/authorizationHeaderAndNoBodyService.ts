@@ -123,7 +123,7 @@ export class AuthorizationHeaderAndNobodyService implements IBulkActionService {
                 methodType: config.request_method,
                 securityHeaderName: config.security_header_name,
                 accessToken: AuthorizationHeaderAndNobodyService.accessToken
-            })
+            }).then(response => response.ok)
 
 
 

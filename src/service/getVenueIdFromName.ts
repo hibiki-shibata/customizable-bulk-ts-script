@@ -1,34 +1,30 @@
-// ================= 　Welcome　to customization!　⚠️ Scroll Down for customization　↓ ==============================================================================================================
-import { config } from '../../resource/config.js'
-import { sendJsonBodyRequest } from '../api/sendRequest.js'
+
+import { IBulkActionService } from '../type/IBulkActionService.js'
 import { ICsvRepository } from '../type/ICsvRepository.js'
 import { IPlaceHolderReplacer } from '../type/IPlaceHolderReplacer.js'
-import { IBulkActionService } from '../type/IBulkActionService.js'
 import { PlaceHolderReplacer } from '../util/placeHolderReplacer.js'
-import { get_list_of_optional_csv_column_names } from '../util/getListOfOptionalCsvColumnNames.js'
+import { sendNoBodyRequest } from '../api/sendRequest.js'
+import { config } from '../../resource/config.js'
 import { CsvRepository } from '../repository/csvRepository.js'
-import { JsonRepository } from '../repository/jsonRepository.js'
+import { get_list_of_optional_csv_column_names } from '../util/getListOfOptionalCsvColumnNames.js'
 
 
-export class AuthorizationHeaderAndBodyJsonService implements IBulkActionService {
+export class GetVenueIdFromNameService {
     private static accessToken: string
     private resource_csv_Repository: ICsvRepository
-    private resource_request_body_json: Object
 
     private length_of_csv_rows: number
     private list_of_optional_csv_column_names: string[]
 
-    public static setAccessToken(accessToken: string): AuthorizationHeaderAndBodyJsonService {
+    public static setAccessToken(accessToken: string): GetVenueIdFromNameService {
         if (!accessToken) throw new Error("❌Access token is not provided.")
         this.accessToken = accessToken
-        return new AuthorizationHeaderAndBodyJsonService()
+        return new GetVenueIdFromNameService()
     }
 
     private constructor() {
         // Load the CSV and JSON resource files, using specified path.
         this.resource_csv_Repository = CsvRepository.useCsvFileOf(config.csv_file_path)
-
-        this.resource_request_body_json = JsonRepository.useJsonFileOf(config.json_file_path).getJsonAll()
 
         //Prep for Iteration: Get all rows of the Base column specified in the globalConfig. 
         this.length_of_csv_rows = this.resource_csv_Repository.columnOf(config.base_csv_column_name).getLine().length
@@ -39,7 +35,6 @@ export class AuthorizationHeaderAndBodyJsonService implements IBulkActionService
     public async executeBulkAction(): Promise<void> {
         let failed_csv_lines: string[] = []
         let request_uri: string = config.request_uri
-        let request_json_body: Object = this.resource_request_body_json
         // ~~~~~~~~~~~~~~~~~~ Useful Methods/Variables For Customization. ⚠️ Scroll Down for customization ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         //   1. Get arbitrary data from your CSV file.
@@ -66,16 +61,9 @@ export class AuthorizationHeaderAndBodyJsonService implements IBulkActionService
         // =============================================⚠️ WRITE YOUR CODE BELOW ⚠️=================================================================================================
 
 
-
-
-
-
         // <<<<<<<<<<< START REQUEST ITERATION, based on base CSV Column. <<<<<<<<<<<
         for (let i = 0; i < this.length_of_csv_rows; i++) {
             // >>>>>>>>>>>> LOGIC FOR EACH ROW BELOW >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>        
-
-
-
 
 
             // Replace the name of BASE column as placeholders in the request URI and JSON body with the value of the base column for the current row.
@@ -84,10 +72,6 @@ export class AuthorizationHeaderAndBodyJsonService implements IBulkActionService
             if (!row_of_base_column) throw Error(`❌ Line of [${i + 1}] doesnt exist or is empty. Please check your CSV file.`)
             const placeHolderReplacer: IPlaceHolderReplacer = PlaceHolderReplacer.for_placeHolder(`[${config.base_csv_column_name}]`).replaceWith(row_of_base_column)
             request_uri = placeHolderReplacer.applyToUri(config.request_uri)
-            request_json_body = placeHolderReplacer.applyToJson(this.resource_request_body_json)
-
-
-
 
 
             // Replace the name of OPTIONAL columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
@@ -97,57 +81,42 @@ export class AuthorizationHeaderAndBodyJsonService implements IBulkActionService
                 if (!row_of_optional_column) throw Error(`❌ Column "${optional_csv_column_name}" in row ${i + 1} is empty or does not exist.`)
                 const optionalPlaceHolderReplacer = PlaceHolderReplacer.for_placeHolder(`[${optional_csv_column_name}]`).replaceWith(row_of_optional_column)
                 request_uri = optionalPlaceHolderReplacer.applyToUri(request_uri)
-                request_json_body = optionalPlaceHolderReplacer.applyToJson(request_json_body)
             })
-
-
-
-
 
 
             console.log(`Sending request for row: ${row_of_base_column}`)
             console.log(`Request URI: ${request_uri}`)
-            console.log(`Request Body: ${JSON.stringify(request_json_body, null, 2)}`)
-
 
 
 
             // Send request without waiting the result of previous request.
             if (config.async_process) {
-                sendJsonBodyRequest({
+                sendNoBodyRequest({
                     URI: request_uri,
                     methodType: config.request_method,
                     securityHeaderName: config.security_header_name,
-                    accessToken: AuthorizationHeaderAndBodyJsonService.accessToken,
-                    bodyJson: request_json_body
+                    accessToken: GetVenueIdFromNameService.accessToken
                 }).then(isSuccess => { if (isSuccess) { console.log(`✅ Successfully: [${row_of_base_column}]`) } else { console.warn(`❌ Failed: [${row_of_base_column}]`) } }
                 )
                 continue
             }
 
 
-
-
-
             // Send request and wait for the result of previous request.
-            const isSuccess: boolean = await sendJsonBodyRequest({
+            const response: Response = await sendNoBodyRequest({
                 URI: request_uri,
                 methodType: config.request_method,
                 securityHeaderName: config.security_header_name,
-                accessToken: AuthorizationHeaderAndBodyJsonService.accessToken,
-                bodyJson: request_json_body
+                accessToken: GetVenueIdFromNameService.accessToken
             })
 
-
-
-
-
+            const responseBody = await response.json()
 
 
             // ============================================⚠️ WRITE YOUR CODE ABOVE ⚠️=====================================================================================================
             //                                           Above codes are Default logic.
             // ===========================================================================================================================================================================
-            if (isSuccess) { console.log(`✅ Successfully: [${row_of_base_column}]`) } else {
+            if (response.ok) { console.log(responseBody.results[0].id.$oid) } else {
                 failed_csv_lines.push(`${i + 1}\n`)
                 console.warn(`❌ Failed: [${row_of_base_column}]`)
             }
@@ -155,4 +124,5 @@ export class AuthorizationHeaderAndBodyJsonService implements IBulkActionService
         console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====")
         console.log(`Failed lines:\n ${failed_csv_lines}`)
     }
+
 }
