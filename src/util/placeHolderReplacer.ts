@@ -8,7 +8,7 @@ export class PlaceHolderReplacer implements IPlaceHolderReplacer {
 
 
 
-    public static for_placeHolder(placeholder: string): PlaceHolderReplacer {
+    public static placeHolderIs(placeholder: string): PlaceHolderReplacer {
         if (!placeholder) throw new Error("❌Placeholder name is not provided.")
         return new PlaceHolderReplacer(placeholder)
     }

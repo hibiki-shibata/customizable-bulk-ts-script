@@ -16,7 +16,6 @@ export async function sendAPIRequest(apiRequestParam: ApiRequestParams): Promise
         body: apiRequestParam.bodyJson ? JSON.stringify(apiRequestParam.bodyJson) : undefined,
         signal: AbortSignal.timeout(5000)
     }).catch(error => new Response(null, { status: 500, statusText: error.message }))
-
-    if (!response.ok) console.warn(`Error: ${response.status} ${response.statusText}`)
+    if (!response) console.warn(`No response received from ${apiRequestParam.URI}`)
     return response
 }
