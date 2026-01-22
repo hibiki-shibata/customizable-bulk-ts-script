@@ -1,5 +1,5 @@
-import { fileReader } from '../util/fileReader.js'
-import { ICsvTargetSelector, ICsvRepository } from '../type/ICsvRepository.js'
+import { getFileContent } from '../util/fileReader.js'
+import { ICsvTargetSelector, ICsvRepository } from '../type/repository/ICsvRepository.js'
 
 
 
@@ -16,7 +16,7 @@ export class CsvRepository implements ICsvRepository {
     public static useCsvFileOf(csvPath: string): CsvRepository {
         if (!csvPath) throw new Error("❌CSV file path is not provided.")
 
-        const csvRawData: string = fileReader(csvPath).trim()
+        const csvRawData: string = getFileContent(csvPath).trim()
 
         // Convert the CSV raw data into a 2D array (matrix)
         const csvRawDataMetrix: string[][] = csvRawData.split('\n').map(line => line.split(',').map(cell => cell.trim()))

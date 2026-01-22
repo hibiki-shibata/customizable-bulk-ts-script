@@ -1,3 +1,3 @@
 export interface IBulkActionService {
-    executeBulkAction(): void
+    executeBulkAction(): Promise<void>
 }

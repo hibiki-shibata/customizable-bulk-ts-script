@@ -1,9 +1,8 @@
 import fs from 'node:fs' // or const fs = require('fs'); // if using CommonJS
 
-
-export function fileReader(filePath: string): string {
-    if (!fs.existsSync(filePath)) throw new Error(`❌File not found: ${filePath}`);    
-    const rawData: string = fs.readFileSync(filePath, 'utf8')
+export function getFileContent(relativeFilePath: string): string {
+    if (!fs.existsSync(relativeFilePath)) throw new Error(`❌File not found: ${relativeFilePath}`);
+    const rawData: string = fs.readFileSync(relativeFilePath, 'utf8')
     return rawData
 }
 
