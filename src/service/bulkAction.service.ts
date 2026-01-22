@@ -21,15 +21,15 @@ export class BulkActionService implements IBulkActionService {
 
     public async executeBulkAction(): Promise<void> {
         const failed_csv_lines: string[] = []
-        let request_uri: string = config.request_uri
-        let json_request_body = this.resource_json_repository?.getJsonAll()
         const lengthOfCSV: number = this.resource_csv_repository.columnOf(config.csv_column_name_1).getLine().length
 
         for (let i = 0; i < lengthOfCSV; i++) {
+            let request_uri: string = config.request_uri
+            let json_request_body: Object | undefined = this.resource_json_repository?.getJsonAll()
             // Replace the name of columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
             //  e.g. column_name = "Venue Address" request_uri = "https://example.com/[Venue Address]/example" --replace--> https://example.com/Tokyo/example.
             this.get_list_of_csv_column_names().forEach(csv_column_name => {
-                const placeHolderReplacer = this.placeHolderReplacerForColumnInRow(i, csv_column_name)
+                const placeHolderReplacer: PlaceHolderReplacer = this.placeHolderReplacerForColumnInRow(i, csv_column_name)
                 request_uri = placeHolderReplacer.applyToUri(request_uri)
                 json_request_body = json_request_body ? placeHolderReplacer.applyToJson(json_request_body) : undefined
             })
@@ -52,7 +52,7 @@ export class BulkActionService implements IBulkActionService {
     private placeHolderReplacerForColumnInRow(rowIndex: number, columnName: string): PlaceHolderReplacer {
         const cellValue: string = this.resource_csv_repository.columnOf(columnName).rowOf(rowIndex).getCellValue()
         if (!cellValue) throw Error(`❌ Column "${columnName}" in row ${rowIndex + 1} is empty or does not exist.`)
-        return PlaceHolderReplacer.placeHolderIs(`[${columnName}]`).replaceWith(cellValue)
+        return PlaceHolderReplacer.placeHolderIs(columnName).replaceWith(cellValue)
     }
 
     private get_list_of_csv_column_names(): string[] {
@@ -66,7 +66,7 @@ export class BulkActionService implements IBulkActionService {
     }
 
     private async traceLogger(rowIndex: number, apiResponse: Response, request_uri: string, json_request_body?: Object): Promise<void> {
-        const defaultLogMessage = `Sending request for CSV row ${rowIndex + 1}...\nReq URI: ${request_uri}\nReq Body: ${JSON.stringify(json_request_body, null, 2)}`
+        const defaultLogMessage = `Sent request of CSV row: ${rowIndex + 1}...\nReq URI: ${request_uri}\nReq Body: ${JSON.stringify(json_request_body, null, 2)}`
         if (!apiResponse.ok) {
             console.warn(`${defaultLogMessage}\n❌Line ${rowIndex + 1} failed: ${apiResponse.status} ${apiResponse.statusText}`)
         } else if (config.getVenueIDList) {

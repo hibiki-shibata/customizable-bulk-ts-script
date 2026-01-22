@@ -17,14 +17,12 @@ export async function sendAPIRequest(apiRequestParam: ApiRequestParams): Promise
         signal: AbortSignal.timeout(5000)
     }
 
-    if (apiRequestParam.methodType !== 'GET' && apiRequestParam.methodType !== 'HEAD') {
+    if (apiRequestParam.methodType.toUpperCase() !== 'GET' && apiRequestParam.methodType.toUpperCase() !== 'HEAD') {
         options.body = JSON.stringify(apiRequestParam.bodyJson)
     }
 
     const response: Response = await fetch(apiRequestParam.URI, options).catch(error => {
         return new Response(null, { status: 500, statusText: error.message })
     })
-    
-    if (!response) console.warn(`No response received from ${apiRequestParam.URI}`)
     return response
 }
