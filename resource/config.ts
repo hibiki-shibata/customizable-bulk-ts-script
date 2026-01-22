@@ -1,58 +1,47 @@
 import { configType } from "../src/type/config.Type.js"; export const config: configType = {
-// =====================================================================================================================================
+  // =====================================================================================================================================
 
-//                       Feel free to contact HIBIKI for question !
+  //                       Feel free to contact HIBIKI for question !
 
-// ============================📝 FILL YOUR CONFIGURATION BELOW 📝==================================================================================
+  // ============================📝 FILL YOUR CONFIGURATION BELOW 📝==================================================================================
+  
+  // A) Change to true if you want to get venue ID list from the JSON file instead of CSV.
+  getVenueIDList: false,
 
-
-
-
-
-  // A) Request URI.
-  //        Optionally, use <Your Column Name> as a placeholder for replacing it with data in the CSV column below.
-  request_uri: "https://example-restautnt-management/open/[Customer ID]/customerID/[Venue Address]/venueaddress/[Contact]/contact",
-
-  // B) Request Method.
-  request_method: "PUT",
-
-  // C) Access Token header name.
+  // B) Access Token's header name.
   security_header_name: "Authorization",
 
+  // C) Request Method.
+  // request_method: "PUT",
+  request_method: "GET",
+  // request_method: "PATCH",
+  // request_method: "POST",
+  // request_method: "DELETE",
 
-  // D) Define if you want to include JSON request body or not.
-  use_request_body: false,
-
-
-  // E) Primary Column name in CSV file.
-  //        Data in this column will replace the placeholders(e.g.[Customer ID]) in URI / Request Body.
-  base_csv_column_name: "Customer ID",
-
-
-  // F) Optional‼️ : Additional CSV column names.
-  //                      If you want to use additional columns in the CSV file, specify them here. (Up to 10 columns)
-  optional_csv_column_name_1: "Customer ID",
-  optional_csv_column_name_2: "Venue Address",
-  optional_csv_column_name_3: "Contact",
+  // D) Request URI.
+  //        Optionally, use [Your Column Name] as a placeholder for replacing it with cell data in the CSV column.
+  request_uri: "https://example-restautnt-management/open/[Customer ID]/customerID/[Venue Address]/venueaddress/[Contact]/contact",
 
 
-  // G) Paths to your resource files.
-  csv_file_path: "./resource/custom-values.csv", // Define your custom data.
-  json_file_path: "./resource/requestBody-config.json", // Define your request body.
+  // F) Resource File names (placed in the /resource folder).
 
+  // F'1) JSON file name. The content represent request body.
+  json_file_name: "requestBody-config.json", 
+
+  // F'2) CSV file name.
+  csv_file_name: "custom-values.csv", // Define your custom data.
+
+  // G) Column names in CSV to use.
+  csv_column_name_1: "venueID", // Must to declear.
+  //  Additional CSV column names: If you want to use additional columns in the CSV file (Max = 10 columns)
+  // csv_column_name_2: "someting", // 2 ~ 10 are optional.
+  // csv_column_name_3: "venueName",
+  // csv_column_name_4: "emailAddress",
   
+  // ============================📝 FILL YOUR CONFIGURATION ABOVE 📝==================================================================================
 
-  // H) Send request without waiting the result of previous request.
-  async_process: false,
+  //                      Feel free to contact HIBIKI for question !
 
-
-
-
-
-// ============================📝 FILL YOUR CONFIGURATION ABOVE 📝==================================================================================
-
-//                      Feel free to contact HIBIKI for question !
-
-// =====================================================================================================================================
+  // =====================================================================================================================================
 }
 
