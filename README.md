@@ -1,5 +1,5 @@
 ## ~ Simple overviews of expected behavior ~ 🐣
-1. Prepare some resource files. (Ref: [What you prepare])(https://github.com/hibiki-shibata/bulk-action-for-daily-task-automation/blob/main/doc/what-to-prepare.md))
+1. Prepare some resource files. (Ref: [What you prepare](https://github.com/hibiki-shibata/bulk-action-for-daily-task-automation/blob/main/doc/what-to-prepare.md))
    - CSV file as a source of custom values for each request in Bulk Action.
    - JSON file to define the request body.
    - Acces-token.txt to insert the security token.
