@@ -1,10 +1,10 @@
 {
-    "id": "[Customer ID]",
+    "id": "[venueID]",
     "enable": true,
-    "home_address": "[Venue Address]",
+    "home_address": "[venueName]",
     "friend_customers": {
-        "customerID": ["[Customer ID]", "[Contact]", "67890" ]
+        "customerID": ["[venueID]", "[emailAddress]", "67890" ]
     },
-    "email": "[Contact]",
+    "email": "[emailAddress]",
     "phoneNumber": "+021111111111"
 }

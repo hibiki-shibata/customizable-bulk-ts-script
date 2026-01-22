@@ -4,7 +4,7 @@ import { configType } from "../src/type/config.Type.js"; export const config: co
   //                       Feel free to contact HIBIKI for question !
 
   // ============================📝 FILL YOUR CONFIGURATION BELOW 📝==================================================================================
-  
+
   // A) Change to true if you want to get venue ID list from the JSON file instead of CSV.
   getVenueIDList: false,
 
@@ -26,7 +26,7 @@ import { configType } from "../src/type/config.Type.js"; export const config: co
   // F) Resource File names (placed in the /resource folder).
 
   // F'1) JSON file name. The content represent request body.
-  json_file_name: "requestBody-config.json", 
+  json_file_name: "requestBody-config.json",
 
   // F'2) CSV file name.
   csv_file_name: "custom-values.csv", // Define your custom data.
@@ -34,10 +34,9 @@ import { configType } from "../src/type/config.Type.js"; export const config: co
   // G) Column names in CSV to use.
   csv_column_name_1: "venueID", // Must to declear.
   //  Additional CSV column names: If you want to use additional columns in the CSV file (Max = 10 columns)
-  // csv_column_name_2: "someting", // 2 ~ 10 are optional.
-  // csv_column_name_3: "venueName",
-  // csv_column_name_4: "emailAddress",
-  
+  // csv_column_name_2: "venueName", // 2 ~ 10 are optional.
+  // csv_column_name_3: "emailAddress",
+
   // ============================📝 FILL YOUR CONFIGURATION ABOVE 📝==================================================================================
 
   //                      Feel free to contact HIBIKI for question !

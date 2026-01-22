@@ -1,4 +1,4 @@
-Customer ID,Venue Address,Contact
+venueID,venueName,emailAddress
 4321122,Minato Tokyo,example@gmail.com
 44ds3f4,NewYork USA,example@gmail.com
 342f2a2,Paris France,example@gmail.com
