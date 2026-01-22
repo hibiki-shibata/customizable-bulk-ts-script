@@ -52,7 +52,7 @@ export class BulkActionService implements IBulkActionService {
     private placeHolderReplacerForColumnInRow(rowIndex: number, columnName: string): PlaceHolderReplacer {
         const cellValue: string = this.resource_csv_repository.columnOf(columnName).rowOf(rowIndex).getCellValue()
         if (!cellValue) throw Error(`❌ Column "${columnName}" in row ${rowIndex + 1} is empty or does not exist.`)
-        return PlaceHolderReplacer.placeHolderIs(columnName).replaceWith(cellValue)
+        return PlaceHolderReplacer.placeHolderIs(`[${columnName}]`).replaceWith(cellValue)
     }
 
     private get_list_of_csv_column_names(): string[] {
