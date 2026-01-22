@@ -1,5 +1,6 @@
 ## ~ Simple overviews of expected behavior ~ 🐣
-1. Prepare some resource files. (Ref: The below "What you manually prepare")
+1. Run ``` git clone https://github.com/hibiki-shibata/bulk-action-for-daily-task-automation ``` in command line.
+2.  Prepare some resource files. (Ref: the below A) )
    - CSV file as a source of custom values for each request in Bulk Action.
    - JSON file to define the request body.
    - Acces-token.txt to insert the security token.
