@@ -1,9 +1,9 @@
 // ================= 　Welcome　to customization!　⚠️ Scroll Down for customization　↓ ==============================================================================================================
 import { config } from '../../resource/config.js'
 import { sendJsonBodyRequest } from '../api/sendRequest.js'
-import { ICsvRepository } from '../type/ICsvRepository.js'
-import { IPlaceHolderReplacer } from '../type/IPlaceHolderReplacer.js'
-import { IBulkActionService } from '../type/IBulkActionService.js'
+import { ICsvRepository } from '../type/repository/ICsvRepository.js'
+import { IPlaceHolderReplacer } from '../type/util/IPlaceHolderReplacer.js'
+import { IBulkActionService } from '../type/service/IBulkActionService.js'
 import { PlaceHolderReplacer } from '../util/placeHolderReplacer.js'
 import { get_list_of_optional_csv_column_names } from '../util/getListOfOptionalCsvColumnNames.js'
 import { CsvRepository } from '../repository/csvRepository.js'

@@ -2,10 +2,10 @@ import { AuthorizationHeaderAndBodyJsonService } from '../service/authorizationH
 import { AuthorizationHeaderAndNobodyService } from '../service/authorizationHeaderAndNoBodyService.js';
 import { GetVenueIdFromNameService } from '../service/getVenueIdFromName.js';
 import { config } from '../../resource/config.js';
-import { fileReader } from '../util/fileReader.js';
+import { getFileContent } from '../util/fileReader.js';
 
 export async function requestTypeController(): Promise<void> {
-    const accessTokenFromFile = fileReader('./resource/access-token.txt');
+    const accessTokenFromFile = getFileContent('./resource/access-token.txt');
 
     if (config.getVenueIDFromName) {
         console.log("Starting to get Venue ID from Venue Name...🤖")

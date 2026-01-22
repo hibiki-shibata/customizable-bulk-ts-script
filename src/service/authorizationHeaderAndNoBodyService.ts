@@ -1,7 +1,7 @@
 
-import { IBulkActionService } from '../type/IBulkActionService.js'
-import { ICsvRepository } from '../type/ICsvRepository.js'
-import { IPlaceHolderReplacer } from '../type/IPlaceHolderReplacer.js'
+import { IBulkActionService } from '../type/service/IBulkActionService.js'
+import { ICsvRepository } from '../type/repository/ICsvRepository.js'
+import { IPlaceHolderReplacer } from '../type/util/IPlaceHolderReplacer.js'
 import { PlaceHolderReplacer } from '../util/placeHolderReplacer.js'
 import { sendNoBodyRequest } from '../api/sendRequest.js'
 import { config } from '../../resource/config.js'

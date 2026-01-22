@@ -1,4 +1,4 @@
-import { IPlaceHolderReplacer } from "../type/IPlaceHolderReplacer.js";
+import { IPlaceHolderReplacer } from "../type/util/IPlaceHolderReplacer.js";
 
 
 

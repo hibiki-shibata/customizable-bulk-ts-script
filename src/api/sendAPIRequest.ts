@@ -6,8 +6,8 @@ type ApiRequestParams = {
     bodyJson?: Object
 }
 
-export async function sendRequest(apiRequestParam: ApiRequestParams): Promise<Response> {
-    const response = await fetch(apiRequestParam.URI, {
+export async function sendAPIRequest(apiRequestParam: ApiRequestParams): Promise<Response> {
+    const response: Response = await fetch(apiRequestParam.URI, {
         method: `${apiRequestParam.methodType}`,
         headers: {
             'Content-Type': 'application/json',
