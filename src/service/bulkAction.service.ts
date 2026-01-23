@@ -24,15 +24,18 @@ export class BulkActionService implements IBulkActionService {
         const failed_csv_lines: string[] = []
         const lengthOfCSV: number = this.resource_csv_repository.columnOf(config.csv_column_name_1).getLine().length
 
-        for (let i = 0; i < lengthOfCSV; i++) {
+        for (let currentRow = 0; currentRow < lengthOfCSV; currentRow++) {
             let request_uri: string = config.request_uri
             let json_request_body: Object | undefined = this.resource_json_repository?.getJsonAll()
             // Replace the name of columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
             //  e.g. column_name = "Venue Address" request_uri = "https://example.com/[Venue Address]/example" --replace--> https://example.com/Tokyo/example.
             this.resource_csv_repository.get_list_of_csv_column_names().forEach(csv_column_name => {
-                const placeHolderReplacer: PlaceholderReplacer = this.placeHolderReplacerForColumnInRow(i, csv_column_name)
-                request_uri = placeHolderReplacer.applyTo(request_uri).toString()
-                json_request_body = json_request_body ? placeHolderReplacer.applyTo(json_request_body) : undefined
+                const currentCellValue: string = this.resource_csv_repository.columnOf(csv_column_name).rowOf(currentRow).getCellValue()
+                if (!currentCellValue) throw Error(`❌ Column "${csv_column_name}" in row ${currentRow + 1} is empty or does not exist.`)
+                const placeholderReplacerForCurrentCell: PlaceholderReplacer = PlaceholderReplacer.placeholderIs(`[${csv_column_name}]`).replaceWith(currentCellValue)
+
+                request_uri = placeholderReplacerForCurrentCell.applyTo(request_uri).toString()
+                json_request_body = json_request_body ? placeholderReplacerForCurrentCell.applyTo(json_request_body) : undefined
             })
 
             const res: Response = await sendAPIRequest({
@@ -44,15 +47,9 @@ export class BulkActionService implements IBulkActionService {
             })
 
             // Logging failed lines
-            if (!res.ok) failed_csv_lines.push((i + 1).toString())
-            Logger.log(i, res, request_uri, json_request_body)
+            if (!res.ok) failed_csv_lines.push((currentRow + 1).toString())
+            Logger.log(currentRow, res, request_uri, json_request_body)
         }
         console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
-    }
-
-    private placeHolderReplacerForColumnInRow(rowIndex: number, columnName: string): PlaceholderReplacer {
-        const cellValue: string = this.resource_csv_repository.columnOf(columnName).rowOf(rowIndex).getCellValue()
-        if (!cellValue) throw Error(`❌ Column "${columnName}" in row ${rowIndex + 1} is empty or does not exist.`)
-        return PlaceholderReplacer.placeholderIs(`[${columnName}]`).replaceWith(cellValue)
     }
 }
