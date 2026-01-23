@@ -1,0 +1,10 @@
+{
+    "id": "[venueID]",
+    "enable": true,
+    "home_address": "Tokyo",
+    "friend_customers": {
+        "customerID": ["[venueID]", "[emailAddress]", "67890" ]
+    },
+    "name": "[venueName]",
+    "phoneNumber": "+021111111111"
+}

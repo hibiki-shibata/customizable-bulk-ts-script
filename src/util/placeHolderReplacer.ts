@@ -1,6 +1,6 @@
 import { IPlaceholderReplacer } from "../type/util/IPlaceHolderReplacer.js";
 
-export class PlaceholderReplacer {
+export class PlaceholderReplacer implements IPlaceholderReplacer {
     private static newValueToReplace: string
     private placeholderName: string
 
