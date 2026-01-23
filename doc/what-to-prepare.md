@@ -7,7 +7,7 @@
    - ※ For those who's not familar with Browser scraping🧑‍🎓.
       - [This chrome example](https://developer.chrome.com/docs/devtools/network) would be helpful to retrieve basic HTTP request info you need.
 
-2. Edit [JSON file](https://github.com/hibiki-shibata/bulk-action-for-daily-task-automation/blob/main/resource/requestBody-config.json)📝
+2. Edit [JSON file](https://github.com/hibiki-shibata/bulk-action-for-daily-task-automation/blob/main/resource/http-request-body/requestBody-config.json)📝
    - Define the structure of request body's JSON data📝.
    - Use placeholder [<Your CSV column name>] for parts that should be replaced by values from CSV.
    

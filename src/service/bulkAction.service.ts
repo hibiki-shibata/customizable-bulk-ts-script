@@ -17,11 +17,10 @@ export class BulkActionService implements IBulkActionService {
     private readonly templateRequestBodyJson?: Object
     private readonly requestMethod: string
     private readonly securityHeaderName: string
-    private failed_csv_lines: string[] = []
 
     public constructor() {
         this.resource_csv_repository = CsvRepository.useFileOf(`./resource/${config.csv_file_name}`) // Load CSV file
-        this.resource_json_repository = config.json_file_name ? JsonRepository.useJsonFileOf(`./resource/${config.json_file_name}`) : undefined // Load JSON file if specified
+        this.resource_json_repository = config.json_file_name ? JsonRepository.useJsonFileOf(`./resource/http-request-body/${config.json_file_name}`) : undefined // Load JSON file if specified
         this.accessToken = readFileContent('./resource/access-token.txt')
         this.templaceRequestURI = config.request_uri
         this.templateRequestBodyJson = config.json_file_name ? this.resource_json_repository?.getJsonAll() : undefined

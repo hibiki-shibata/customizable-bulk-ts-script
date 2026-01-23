@@ -4,8 +4,7 @@ node_modules
 *.log
 *.env
 requestBody.json
-venueID.csv
 dist
-resource
+resource/http-request-body/*.json
 access-token.txt
 custom-values.csv
