@@ -10,46 +10,59 @@ import { PlaceholderReplacer } from '../util/placeholderReplacer.js'
 import { Logger } from '../util/logger.js'
 
 export class BulkActionService implements IBulkActionService {
-    private readonly accessToken: string
     private readonly resource_csv_repository: ICsvRepository
     private readonly resource_json_repository?: IJsonRepository
+    private readonly accessToken: string
+    private readonly templaceRequestURI: string // = config.request_uri
+    private readonly templateRequestBodyJson?: Object
+    private readonly requestMethod: string
+    private readonly securityHeaderName: string
+    private failed_csv_lines: string[] = []
 
     public constructor() {
-        this.accessToken = readFileContent('./resource/access-token.txt')
         this.resource_csv_repository = CsvRepository.useFileOf(`./resource/${config.csv_file_name}`) // Load CSV file
         this.resource_json_repository = config.json_file_name ? JsonRepository.useJsonFileOf(`./resource/${config.json_file_name}`) : undefined // Load JSON file if specified
+        this.accessToken = readFileContent('./resource/access-token.txt')
+        this.templaceRequestURI = config.request_uri
+        this.templateRequestBodyJson = config.json_file_name ? this.resource_json_repository?.getJsonAll() : undefined
+        this.requestMethod = config.request_method
+        this.securityHeaderName = config.security_header_name
     }
 
     public async executeBulkAction(): Promise<void> {
         const failed_csv_lines: string[] = []
         const lengthOfCSV: number = this.resource_csv_repository.columnOf(config.csv_column_name_1).getLine().length
-
+        let request_uri: string
+        let json_request_body: Object | undefined
         for (let currentRow = 0; currentRow < lengthOfCSV; currentRow++) {
-            let request_uri: string = config.request_uri
-            let json_request_body: Object | undefined = this.resource_json_repository?.getJsonAll()
-            // Replace the name of columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
-            //  e.g. column_name = "Venue Address" request_uri = "https://example.com/[Venue Address]/example" --replace--> https://example.com/Tokyo/example.
-            this.resource_csv_repository.get_list_of_csv_column_names().forEach(csv_column_name => {
-                const currentCellValue: string = this.resource_csv_repository.columnOf(csv_column_name).rowOf(currentRow).getCellValue()
-                if (!currentCellValue) throw Error(`❌ Column "${csv_column_name}" in row ${currentRow + 1} is empty or does not exist.`)
-                const placeholderReplacerForCurrentCell: PlaceholderReplacer = PlaceholderReplacer.placeholderIs(`[${csv_column_name}]`).replaceWith(currentCellValue)
-
-                request_uri = placeholderReplacerForCurrentCell.applyTo(request_uri).toString()
-                json_request_body = json_request_body ? placeholderReplacerForCurrentCell.applyTo(json_request_body) : undefined
-            })
-
+            const builtRequest = this.requestBuilder(this.templaceRequestURI, this.templateRequestBodyJson, currentRow)
+            request_uri = builtRequest.builtURI
+            json_request_body = builtRequest.builtBodyJson
             const res: Response = await sendAPIRequest({
                 URI: request_uri,
-                methodType: config.request_method,
-                securityHeaderName: config.security_header_name,
+                methodType: this.requestMethod,
+                securityHeaderName: this.securityHeaderName,
                 accessToken: this.accessToken,
                 bodyJson: json_request_body
             })
-
-            // Logging failed lines
-            if (!res.ok) failed_csv_lines.push((currentRow + 1).toString())
+            if (!res.ok) failed_csv_lines.push((currentRow + 1).toString()) // Logging failed lines
             Logger.log(currentRow, res, request_uri, json_request_body)
         }
         console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
+    }
+
+    private requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {
+        let builtURI: string = templateURI
+        let builtBodyJson: Object | undefined = templateBodyJson
+        // Replace the name of columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
+        //  e.g. column_name = "Venue Address" request_uri = "https://example.com/[Venue Address]/example" --replace--> https://example.com/Tokyo/example.
+        this.resource_csv_repository.get_list_of_csv_column_names().forEach(csv_column_name => {
+            const currentCellValue: string = this.resource_csv_repository.columnOf(csv_column_name).rowOf(csvRowIndex).getCellValue()
+            if (!currentCellValue) throw Error(`❌ Column "${csv_column_name}" in row ${csvRowIndex + 1} is empty or does not exist.`)
+            const placeholderReplacerForCurrentCell: PlaceholderReplacer = PlaceholderReplacer.placeholderIs(`[${csv_column_name}]`).replaceWith(currentCellValue)
+            builtURI = placeholderReplacerForCurrentCell.applyTo(builtURI).toString()
+            builtBodyJson = builtBodyJson ? placeholderReplacerForCurrentCell.applyTo(builtBodyJson) : undefined
+        })
+        return { builtURI, builtBodyJson }
     }
 }
