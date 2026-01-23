@@ -1,11 +1,12 @@
 export interface ICsvRepository {
-    columnOf(columnName: string): ICsvTargetSelector
-    rowOf(indexOfLine: number): ICsvTargetSelector
+    columnOf(columnName: string): ICsvTargetValueFetcher
+    rowOf(indexOfLine: number): ICsvTargetValueFetcher
+    get_list_of_csv_column_names(): string[]
 }
 
-export interface ICsvTargetSelector {
-    columnOf(columnName: string): ICsvTargetSelector
-    rowOf(indexOfLine: number): ICsvTargetSelector
+export interface ICsvTargetValueFetcher {
+    columnOf(columnName: string): ICsvTargetValueFetcher
+    rowOf(indexOfLine: number): ICsvTargetValueFetcher
     getCellValue(): string
     getLine(): string[]
 }

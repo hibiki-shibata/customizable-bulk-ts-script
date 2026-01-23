@@ -20,4 +20,5 @@
     Run the project by command🔥
     ```bash
     npm start --prefix <File path to bulk-action-for-daily-task-automation folder>
+    npm start --prefix ~/Downloads/bulk-action-for-daily-task-automation
     ```

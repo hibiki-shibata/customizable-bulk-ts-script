@@ -1,7 +1,6 @@
-import { getFileContent } from '../util/fileReader.js'
-import { ICsvTargetSelector, ICsvRepository } from '../type/repository/ICsvRepository.js'
-
-
+import { readFileContent } from '../util/fileReader.js'
+import { ICsvTargetValueFetcher, ICsvRepository } from '../type/repository/ICsvRepository.js'
+import { config } from '../../resource/config.js'
 
 export class CsvRepository implements ICsvRepository {
     private static csvAllTargetDataMetrix: string[][] // [rows][columnss]
@@ -13,10 +12,10 @@ export class CsvRepository implements ICsvRepository {
         }
     }
 
-    public static useCsvFileOf(csvPath: string): CsvRepository {
+    public static useFileOf(csvPath: string): CsvRepository {
         if (!csvPath) throw new Error("❌CSV file path is not provided.")
 
-        const csvRawData: string = getFileContent(csvPath).trim()
+        const csvRawData: string = readFileContent(csvPath).trim()
 
         // Convert the CSV raw data into a 2D array (matrix)
         const csvRawDataMetrix: string[][] = csvRawData.split('\n').map(line => line.split(',').map(cell => cell.trim()))
@@ -33,40 +32,45 @@ export class CsvRepository implements ICsvRepository {
     }
 
 
-    columnOf(columnName: string): CsvTargetSelector {
+    columnOf(columnName: string): CsvTargetValueFetcher {
         if (!columnName) throw Error("❌Column name is not provided.")
 
         // Get the Index of the target column name.
         const indexOftargetColumn: number = CsvRepository.columnNames.indexOf(columnName)
-
         // Get all data in the specified column
         const allRowsInTargetColumn: string[] = CsvRepository.csvAllTargetDataMetrix.map(row => row[indexOftargetColumn] || "")
 
         const expect_ColumnOf_asNext: boolean = false
 
         if (indexOftargetColumn < 0 || allRowsInTargetColumn.length <= 0) throw Error(`❌Column "${columnName}" not found in the CSV file.`)
-        return new CsvTargetSelector(allRowsInTargetColumn, expect_ColumnOf_asNext, CsvRepository.columnNames)
+        return new CsvTargetValueFetcher(allRowsInTargetColumn, expect_ColumnOf_asNext, CsvRepository.columnNames)
     }
 
-    rowOf(LineIndex: number): CsvTargetSelector {
+    rowOf(LineIndex: number): CsvTargetValueFetcher {
         if (LineIndex < 0) throw Error("❌Line index cannot be negative.")
-
         // Get all data in the specified row
         const allColumnsInTargetRow: string[] = CsvRepository.csvAllTargetDataMetrix[LineIndex] || []
-
         // Prevent the next call to columnOf() method
         const expect_ColumnOf_asNext: boolean = true
-
         if (LineIndex < 0 || allColumnsInTargetRow.length <= 0) throw Error(`❌Row "${LineIndex}" not found in the CSV file.`)
-        return new CsvTargetSelector(allColumnsInTargetRow, expect_ColumnOf_asNext, CsvRepository.columnNames)
+        return new CsvTargetValueFetcher(allColumnsInTargetRow, expect_ColumnOf_asNext, CsvRepository.columnNames)
     }
 
+    get_list_of_csv_column_names(): string[] {
+        const optionalColumns: string[] = []
+        Object.entries(config).forEach(([key, value]) => {
+            // Ignore keys that are not additional CSV column names or are empty.
+            if (!key.startsWith("csv_column_name_") || typeof value !== 'string' || !value.trim()) return
+            optionalColumns.push(value.trim())
+        })
+        return optionalColumns
+    }
 }
 
 
 
 
-class CsvTargetSelector implements CsvRepository, ICsvTargetSelector {
+class CsvTargetValueFetcher implements ICsvTargetValueFetcher {
     private columnNames: string[]
     private targetRowsOrColumns: string[]
     private expect_ColumnOf_asNext: boolean
@@ -92,7 +96,7 @@ class CsvTargetSelector implements CsvRepository, ICsvTargetSelector {
 
         // Check if the selected cell data is empty
         if (!targetCellData || indexOftargetColumn < 0) throw Error(`❌Column "${targetColumnName}" not found in the CSV file.`)
-        CsvTargetSelector.targetCellValue = targetCellData
+        CsvTargetValueFetcher.targetCellValue = targetCellData
         return this
     }
 
@@ -105,21 +109,19 @@ class CsvTargetSelector implements CsvRepository, ICsvTargetSelector {
 
         // Check if the selected cell data is empty
         if (!targetCellData || indexOfTargetLine < 0) throw Error(`❌Row "${indexOfTargetLine}" not found in the CSV file.`)
-        CsvTargetSelector.targetCellValue = targetCellData
+        CsvTargetValueFetcher.targetCellValue = targetCellData
         return this
     }
 
     getCellValue(): string {
-        if (!CsvTargetSelector.targetCellValue) throw Error("❌No value has been selected. Please use columnOf() or rowOf() to select a value first.")
+        if (!CsvTargetValueFetcher.targetCellValue) throw Error("❌No value has been selected. Please use columnOf() or rowOf() to select a value first.")
         // Return the value of the selected cell
-        return CsvTargetSelector.targetCellValue
+        return CsvTargetValueFetcher.targetCellValue
     }
 
     getLine(): string[] {
-        if (CsvTargetSelector.targetCellValue) throw Error("❌You have already selected a cell value. Please use columnOf() or rowOf() to select a value first.")
+        if (CsvTargetValueFetcher.targetCellValue) throw Error("❌You have already selected a cell value. Please use columnOf() or rowOf() to select a value first.")
         // Return the entire row or column as an array
         return this.targetRowsOrColumns
     }
-
-
 }

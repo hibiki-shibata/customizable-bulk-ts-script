@@ -1,34 +1,35 @@
-import { IPlaceHolderReplacer } from "../type/util/IPlaceHolderReplacer.js";
+import { IPlaceholderReplacer } from "../type/util/IPlaceHolderReplacer.js";
 
-export class PlaceHolderReplacer implements IPlaceHolderReplacer {
-    private readonly placeholderName: string
-    private newValue!: string;
+export class PlaceholderReplacer {
+    private static newValueToReplace: string
+    private placeholderName: string
 
-    public static placeHolderIs(placeholder: string): PlaceHolderReplacer {
+    public static placeholderIs(placeholder: string): PlaceholderReplacer {
         if (!placeholder) throw new Error("❌Placeholder name is not provided.")
-        return new PlaceHolderReplacer(placeholder)
+        return new PlaceholderReplacer(placeholder)
     }
 
-    public replaceWith(newValue: string): PlaceHolderReplacer {
-        if (!newValue) throw new Error("❌Placeholder name is not set. Please call placeHolder first.")
-        this.newValue = newValue
+    public replaceWith(newValue: string): this {
+        if (!newValue) throw new Error("❌New value to replace is not provided.")
+        PlaceholderReplacer.newValueToReplace = newValue
         return this
     }
 
     private constructor(placeholder: string) {
+        if (!placeholder) throw new Error("❌Placeholder name is not provided.")
         this.placeholderName = placeholder
-        if (!this.placeholderName) throw new Error("Placeholder name is not set. Please call placeHolder first.")
     }
 
-    // Replace [PLACE_HOLDER] in the URI with the actual target value.
-    applyToUri(uri: string): string {
-        if (!this.newValue) throw new Error("❌Provide the replacing value first. Please call replaceWith first.")
-        return uri.replaceAll(this.placeholderName, this.newValue)
+    public applyTo(dataToBeReplaced: string | Object): string | Object {
+        if (!PlaceholderReplacer.newValueToReplace) throw new Error("❌Provide the replacing value first. Please call replaceWith first.")
+        switch (typeof dataToBeReplaced) {
+            case "string":
+                return dataToBeReplaced.replaceAll(this.placeholderName, PlaceholderReplacer.newValueToReplace)
+            case "object":
+                return JSON.parse(JSON.stringify(dataToBeReplaced).replaceAll(this.placeholderName, PlaceholderReplacer.newValueToReplace))
+            default:
+                throw new Error("❌Unsupported data type for replacement. Only string and Object are supported.")
+        }
     }
 
-    // Replace [PLACE_HOLDER] in the JSON data with the actual target value.
-    applyToJson(jsonData: Object): Object {
-        if (!this.newValue) throw new Error("❌Provide the replacing value first. Please call replaceWith first.")
-        return JSON.parse(JSON.stringify(jsonData).replaceAll(this.placeholderName, this.newValue))
-    }
 }

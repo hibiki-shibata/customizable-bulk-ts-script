@@ -1,5 +1,4 @@
-export interface IPlaceHolderReplacer {
-  replaceWith(newValue: string): IPlaceHolderReplacer
-  applyToUri(uri: string): string
-  applyToJson(jsonData: Object): Object
+export interface IPlaceholderReplacer {
+  replaceWith(newValue: string): this
+  applyTo(dataToBeReplaced: string | Object): string | Object
 }

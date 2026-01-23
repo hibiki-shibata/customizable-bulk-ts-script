@@ -1,9 +1,11 @@
-const i = 1
-
 export type configType = {
+    showOnlyVenueID?: boolean
+    security_header_name: string,
     request_method: string,
     request_uri: string,
-    security_header_name: string,
+
+    csv_file_name: string,
+    json_file_name?: string,
 
     csv_column_name_1: string,
     csv_column_name_2?: string,
@@ -15,10 +17,4 @@ export type configType = {
     csv_column_name_8?: string,
     csv_column_name_9?: string,
     csv_column_name_10?: string,
-
-
-    csv_file_name: string,
-    json_file_name?: string,
-    getVenueIDList?: boolean
 }
-
