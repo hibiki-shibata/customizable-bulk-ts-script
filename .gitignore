@@ -5,6 +5,6 @@ node_modules
 *.env
 requestBody.json
 dist
-# resource/http-request-body/*.json
+resource/http-request-body/*.json
 access-token.txt
 custom-values.csv

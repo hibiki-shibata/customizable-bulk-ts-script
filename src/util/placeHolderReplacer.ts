@@ -1,4 +1,4 @@
-import { IPlaceholderReplacer } from "../type/util/IPlaceHolderReplacer.js";
+import { IPlaceholderReplacer } from "../type/util/IPlaceholderReplacer.js";
 
 export class PlaceholderReplacer implements IPlaceholderReplacer {
     private static newValueToReplace: string
