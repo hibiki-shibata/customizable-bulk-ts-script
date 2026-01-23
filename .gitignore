@@ -1,4 +1,8 @@
-test*
+test*js
+test*ts
+test*.json
+test/*map
+test/*js
 node_modules
 .DS_Store
 *.log

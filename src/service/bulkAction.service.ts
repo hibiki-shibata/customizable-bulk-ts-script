@@ -50,7 +50,7 @@ export class BulkActionService implements IBulkActionService {
         console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
     }
 
-    private requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {
+    requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {
         let builtURI: string = templateURI
         let builtBodyJson: Object | undefined = templateBodyJson
         // Replace the name of columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
