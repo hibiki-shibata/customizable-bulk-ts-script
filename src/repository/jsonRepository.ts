@@ -1,8 +1,6 @@
 import { readFileContent } from '../util/fileReader.js'
 import { IJsonRepository } from '../type/repository/IJsonRepository.js'
 
-
-
 export class JsonRepository implements IJsonRepository {
     private static JsonDataALl: Object
 

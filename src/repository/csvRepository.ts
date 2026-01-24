@@ -31,7 +31,6 @@ export class CsvRepository implements ICsvRepository {
         return new CsvRepository()
     }
 
-
     columnOf(columnName: string): CsvTargetValueFetcher {
         if (!columnName) throw Error("❌Column name is not provided.")
 
@@ -66,8 +65,6 @@ export class CsvRepository implements ICsvRepository {
         return optionalColumns
     }
 }
-
-
 
 
 class CsvTargetValueFetcher implements ICsvTargetValueFetcher {

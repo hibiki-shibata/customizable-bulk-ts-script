@@ -11,7 +11,6 @@ import { Logger } from '../util/logger.js'
 
 export class BulkActionService implements IBulkActionService {
     private readonly resource_csv_repository: ICsvRepository
-    private readonly resource_json_repository?: IJsonRepository
     private readonly accessToken: string
     private readonly templaceRequestURI: string // = config.request_uri
     private readonly templateRequestBodyJson?: Object
@@ -19,11 +18,11 @@ export class BulkActionService implements IBulkActionService {
     private readonly securityHeaderName: string
 
     public constructor() {
+        const resource_json_repository = config.json_file_name ? JsonRepository.useJsonFileOf(`./resource/http-request-body/${config.json_file_name}`) : undefined // Load JSON file if specified
         this.resource_csv_repository = CsvRepository.useFileOf(`./resource/${config.csv_file_name}`) // Load CSV file
-        this.resource_json_repository = config.json_file_name ? JsonRepository.useJsonFileOf(`./resource/http-request-body/${config.json_file_name}`) : undefined // Load JSON file if specified
         this.accessToken = readFileContent('./resource/access-token.txt')
         this.templaceRequestURI = config.request_uri
-        this.templateRequestBodyJson = config.json_file_name ? this.resource_json_repository?.getJsonAll() : undefined
+        this.templateRequestBodyJson = config.json_file_name ? resource_json_repository?.getJsonAll() : undefined
         this.requestMethod = config.request_method
         this.securityHeaderName = config.security_header_name
     }
@@ -50,7 +49,7 @@ export class BulkActionService implements IBulkActionService {
         console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
     }
 
-    requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {
+    private requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {
         let builtURI: string = templateURI
         let builtBodyJson: Object | undefined = templateBodyJson
         // Replace the name of columns as placeholders in the request URI and JSON body with the value of the optional column for the current row.
