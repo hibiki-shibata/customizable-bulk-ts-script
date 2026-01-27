@@ -46,7 +46,9 @@ export class BulkActionService implements IBulkActionService {
             if (!res.ok) failed_csv_lines.push((currentRow + 1).toString()) // Logging failed lines
             Logger.log(currentRow, res, request_uri, json_request_body)
         }
-        console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
+        setTimeout(() => {
+            console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
+        }, 1700)
     }
 
     private requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {
