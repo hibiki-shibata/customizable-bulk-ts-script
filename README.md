@@ -13,9 +13,9 @@
 #### Prerequisite:
 1. Install Node.js (Download via [Node.js official](https://nodejs.org/en/download))
 2. Get the script in your computer.
-```bash
-git clone https://github.com/hibiki-shibata/bulk-script-customizable
-```
+   ```bash
+   git clone https://github.com/hibiki-shibata/bulk-script-customizable
+   ```
 3. Install dependencies by command.
     ```bash 
     npm install
