@@ -1,6 +1,7 @@
 test*js
 test*ts
 test*.json
+test*
 test/*map
 test/*js
 node_modules

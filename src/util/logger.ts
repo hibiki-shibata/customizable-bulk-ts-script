@@ -1,7 +1,7 @@
 import { config } from "../../resource/config.js"
 
 export class Logger {
-    public static log(rowIndex: number, apiResponse: Response, request_uri: string, json_request_body?: Object): void {
+    public static async log(rowIndex: number, apiResponse: Response, request_uri: string, json_request_body?: Object): Promise<void> {
         const defaultLogMessage = `Sent request of CSV row: ${rowIndex + 1}...\nReq URI: ${request_uri}\nReq Body: ${JSON.stringify(json_request_body, null, 2)}`
         if (!apiResponse.ok) return console.warn(`${defaultLogMessage}\n❌Line ${rowIndex + 1} failed: ${apiResponse.status} ${apiResponse.statusText}`)
 

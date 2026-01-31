@@ -1,10 +1,35 @@
 {
-    "id": "[venueID]",
-    "enable": true,
-    "home_address": "Tokyo",
-    "friend_customers": {
-        "customerID": ["[venueID]", "[emailAddress]", "67890" ]
-    },
-    "name": "[venueName]",
-    "phoneNumber": "+021111111111"
+    "enabled": true,
+    "consumer_info_config": [
+        {
+            "delivery_provider": "WOLT",
+            "show_customer_phone_number": false,
+            "show_customer_address_details": false,
+            "show_customer_full_name": false,
+            "show_small_order_surcharge_amount": false
+        },
+        {
+            "delivery_provider": "SELF_DELIVERY",
+            "show_customer_phone_number": false,
+            "show_customer_address_details": false,
+            "show_customer_full_name": false,
+            "show_small_order_surcharge_amount": false
+        }
+    ],
+    "use_courier_eta": false,
+    "use_pickup_task_started_filter": false,
+    "geo_fenced_prep_time_duration_in_seconds": null,
+    "accept_order_default_prep_time_duration_in_seconds": null,
+    "accept_order_default_prep_time_max_duration_in_seconds": null,
+    "accept_order_default_self_delivery_duration_in_seconds": null,
+    "auto_accept_enabled": false,
+    "auto_accept_editable_by_merchant": false,
+    "show_loyalty_card_number": false,
+    "show_wolt_plus": false,
+    "show_real_address": false,
+    "external_venue_id": null,
+    "auto_acknowledge_config_enabled": false,
+    "send_order_review_webhooks": false,
+    "send_pickup_completed_notification": false,
+    "integrator": "mwp_orderly"
 }
