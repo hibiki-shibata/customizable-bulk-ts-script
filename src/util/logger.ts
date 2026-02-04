@@ -9,13 +9,13 @@ export class Logger {
             apiResponse.json().then(data => {
                 const venueID: string = data.results[0].id.$oid
                 console.log(venueID)
-            }).catch(() => console.log("🚨Failed to retrieve Venue ID from succeeded response."))
+            }).catch(() => console.log("🚨Failed to retrieve Venue ID from success response."))
         } else if (config.showCpPaymentBalance) {
             apiResponse.json().then(data => {
-                const cpPaymentBalance: number = data.items[0].balance
+                const cpPaymentBalance: number = data.JPY.total
                 console.log(cpPaymentBalance)
 
-            }).catch(() => console.log("🚨Failed to retrieve CP Payment Balance from succeeded response."))
+            }).catch(() => console.log("CP account is deleted?"))
         } else {
             console.log(`${defaultLogMessage}\n✅Line: ${rowIndex + 2} Succeeed`)
         }

@@ -14,7 +14,7 @@ export async function sendAPIRequest(apiRequestParam: ApiRequestParams): Promise
             'Content-Type': 'application/json',
             [apiRequestParam.securityHeaderName]: `${apiRequestParam.accessToken}`
         },
-        signal: AbortSignal.timeout(5000)
+        signal: AbortSignal.timeout(7000)
     }
 
     if (apiRequestParam.methodType.toUpperCase() !== 'GET' && apiRequestParam.methodType.toUpperCase() !== 'HEAD') {
