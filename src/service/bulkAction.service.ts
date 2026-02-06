@@ -3,7 +3,6 @@ import { sendAPIRequest } from '../api/sendAPIRequest.js'
 import { CsvRepository } from '../repository/csvRepository.js'
 import { JsonRepository } from '../repository/jsonRepository.js'
 import { ICsvRepository } from '../type/repository/ICsvRepository.js'
-import { IJsonRepository } from '../type/repository/IJsonRepository.js'
 import { IBulkActionService } from '../type/service/IBulkAction.service.js'
 import { readFileContent } from '../util/fileReader.js'
 import { PlaceholderReplacer } from '../util/placeholderReplacer.js'
@@ -44,9 +43,12 @@ export class BulkActionService implements IBulkActionService {
                 bodyJson: json_request_body
             })
             if (!res.ok) failed_csv_lines.push((currentRow + 2).toString()) // Recording failed lines
-            await Logger.log(currentRow, res, request_uri, json_request_body)
+            Logger.log(currentRow, res, request_uri, json_request_body)
         }
-        console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
+        setTimeout(() => {
+            console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
+        }, 500)
+
     }
 
     private requestBuilder(templateURI: string, templateBodyJson: Object | undefined, csvRowIndex: number): { builtURI: string, builtBodyJson: Object | undefined } {

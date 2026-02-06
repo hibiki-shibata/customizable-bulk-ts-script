@@ -13,3 +13,4 @@ dist
 resource/http-request-body/*.json
 access-token.txt
 custom-values.csv
+temp*

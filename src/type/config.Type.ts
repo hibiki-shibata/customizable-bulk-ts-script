@@ -1,5 +1,6 @@
 export type configType = {
-    showOnlyVenueID?: boolean
+    showVenueID?: boolean,
+    showCpPaymentBalance?: boolean,
     security_header_name: string,
     request_method: string,
     request_uri: string,
