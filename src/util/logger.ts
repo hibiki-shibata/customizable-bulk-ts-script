@@ -14,7 +14,6 @@ export class Logger {
             apiResponse.json().then(data => {
                 const cpPaymentBalance: number = data.JPY.total
                 console.log(cpPaymentBalance)
-
             }).catch(() => console.log("No Payment balance data"))
         } else {
             console.log(`${defaultLogMessage}\n✅Line: ${rowIndex + 2} Succeeed`)
