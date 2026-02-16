@@ -1,6 +1,5 @@
 import { readFileContent } from '../util/fileReader.js'
 import { ICsvTargetValueFetcher, ICsvRepository } from '../type/repository/ICsvRepository.js'
-import { config } from '../../resource/config.js'
 
 export class CsvRepository implements ICsvRepository {
     private static csvAllTargetDataMetrix: string[][] // [rows][columnss]
@@ -56,13 +55,10 @@ export class CsvRepository implements ICsvRepository {
     }
 
     get_list_of_csv_column_names(): string[] {
-        const optionalColumns: string[] = []
-        Object.entries(config).forEach(([key, value]) => {
-            // Ignore keys that are not additional CSV column names or are empty.
-            if (!key.startsWith("csv_column_name_") || typeof value !== 'string' || !value.trim()) return
-            optionalColumns.push(value.trim())
-        })
-        return optionalColumns
+        return CsvRepository.columnNames
+    }
+    get_length_of_csv(): number {
+        return CsvRepository.csvAllTargetDataMetrix.length
     }
 }
 
@@ -116,7 +112,7 @@ class CsvTargetValueFetcher implements ICsvTargetValueFetcher {
         return CsvTargetValueFetcher.targetCellValue
     }
 
-    getLine(): string[] {
+    getDataInLine(): string[] {
         if (CsvTargetValueFetcher.targetCellValue) throw Error("❌You have already selected a cell value. Please use columnOf() or rowOf() to select a value first.")
         // Return the entire row or column as an array
         return this.targetRowsOrColumns
