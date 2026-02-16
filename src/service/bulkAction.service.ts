@@ -6,7 +6,7 @@ import { ICsvRepository } from '../type/repository/ICsvRepository.js'
 import { IBulkActionService } from '../type/service/IBulkAction.service.js'
 import { readFileContent } from '../util/fileReader.js'
 import { PlaceholderReplacer } from '../util/placeholderReplacer.js'
-import { Logger } from '../util/logger.js'
+import { Logger, LogObj } from '../util/logger.js'
 
 export class BulkActionService implements IBulkActionService {
     private readonly resource_csv_repository: ICsvRepository
@@ -28,7 +28,7 @@ export class BulkActionService implements IBulkActionService {
 
     public async executeBulkAction(): Promise<void> {
         const failed_csv_lines: string[] = []
-        const lengthOfCSV: number = this.resource_csv_repository.columnOf(config.csv_column_name_1).getLine().length
+        const lengthOfCSV: number = this.resource_csv_repository.get_length_of_csv()
         let request_uri: string
         let json_request_body: Object | undefined
         for (let currentRow = 0; currentRow < lengthOfCSV; currentRow++) {
@@ -43,7 +43,10 @@ export class BulkActionService implements IBulkActionService {
                 bodyJson: json_request_body
             })
             if (!res.ok) failed_csv_lines.push((currentRow + 2).toString()) // Recording failed lines
-            Logger.log(currentRow, res, request_uri, json_request_body)
+
+            await Logger.log({ rowIndex: currentRow, apiResponse: res, request_uri, json_request_body } as LogObj)
+
+
         }
         setTimeout(() => {
             console.log("=====🎉All REQUESTS WERE PROCESSED🎉=====\n" + `Failed lines:\n${failed_csv_lines ? failed_csv_lines : 'None'} `)
