@@ -13,8 +13,7 @@ export class Logger {
         // All failed responses will be logged here
         if (!apiResponse.ok) {
             console.error(`${defaultLogMessage}`)
-            console.log(`❌Line ${rowIndex + 2} failed: ${apiResponse.status} ${apiResponse.statusText}`)
-            console.log(`Response message: ${await apiResponse.text()}`)
+            console.log(`❌Line ${rowIndex + 2} failed: ${apiResponse.status} ${apiResponse.statusText} - ${await apiResponse.text()}`)
             return
         }
 
