@@ -6,7 +6,8 @@ import { configType } from "../src/type/config.Type.js"; export const config: co
   // ============================📝 FILL YOUR CONFIGURATION BELOW 📝==================================================================================
 
   // A) Change to true if you want to get venue ID list from venue names in the CSV file.
-  showOnlyVenueID: false,
+  showVenueID: false,
+  showCpPaymentBalance: false,
 
   // B) Access Token's header name.
   security_header_name: "Authorization",
@@ -31,16 +32,9 @@ import { configType } from "../src/type/config.Type.js"; export const config: co
   // F'2) CSV file name.
   csv_file_name: "custom-values.csv", // Define your custom data.
 
-  // G) Column names in CSV to use.
-  csv_column_name_1: "venueID",       // Must to declear.
-  //  Additional CSV column names: If you want to use additional columns in the CSV file (Max = 10 columns)
-  csv_column_name_2: "venueName",     // 2 ~ 10 are optional. Comment out if you don't use.
-  csv_column_name_3: "emailAddress",
-
   // ============================📝 FILL YOUR CONFIGURATION ABOVE 📝==================================================================================
 
   //                      Feel free to contact HIBIKI for question !
 
   // =====================================================================================================================================
 }
-
